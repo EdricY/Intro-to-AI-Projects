@@ -11,7 +11,7 @@ The program may be written to work with either heuristics, search, or a combinat
 
 Advice
 
-1. Build the entire infrastructure to play a game first, but fake the AI part by asking the human what the AI's move would be.2.
+1. Build the entire infrastructure to play a game first, but fake the AI part by asking the human what the AI's move would be.
 2. The entire infrastructure includes things like a way to represent the board, a function to print the board, a function to ask the human for their move, a way to determine whether a player has won, and more.
 3. Look up how to use -- these are not necessarily needed, but are helpful to know
   * make-array and aref (to work with arrays)

@@ -19,4 +19,25 @@ Advice
   * let* (so that you can reference earlier values declared using let)
   * dolist (to iterate though the items in a list)
   * progn (to conveniently list a sequence of lisp statements)
-  
+ 
+##Grading Criteria
+Start: call via (tic-tac-toe)
+ The program must start running by calling (tic-tac-toe)
+ Maximum score
+ 10
+Start: AI asks who starts
+ The AI must ask who goes first: human or computer -- specify by 'H' or 'C'
+ Maximum score
+ 10
+Row/col specification
+ The human will enter row first as 0, 1, or 2, then the column as 0, 1, or 2; rows are numbered top-to-bottom (0-2), columns are numbered left-to-right (0-2).
+ Maximum score
+ 10
+Game OK
+ The game plays OK, plays legally, meets all other requirements, and does win at least sometimes. Note: crashing, etc. means the AI didn't play OK. All human input will be legal, so there should be no cause for crashing.
+ Maximum score
+ 40
+Always wins
+ The AI always wins if a win is possible. Note: crashing, etc. means the AI didn't win.
+ Maximum score
+ 30

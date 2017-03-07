@@ -26,7 +26,7 @@
 				(c-move)
 			)
 		(progn
-			(format t "Input Error!~A~%Please input H or C~%" starter)
+			(format t "Input Error! ~A~%Please input H or C~%~%" starter)
 			(tic-tac-toe)
 		))))
 )
@@ -57,7 +57,7 @@
 )
 
 (defun c-move()
-	(format t "hmmm...~%~%")
+	(format t "~%hmmm...~%~%")
 	(if (sleep 1) "Oh... uh... this is embarassing. You were never supposed to see this :/")
 	
 	; loop through available cells, scoring them
@@ -78,10 +78,12 @@
 	)
 
 	(print-board)
-	(format t "~%>")
 	(if (check-win 'C) "Computer Wins!"
 		(if (check-tie) "Tie."
-			(h-move (read) (read))
+			(progn 
+				(format t "~%>")
+				(h-move (read) (read))
+			)
 		)
 	)
 )
@@ -163,11 +165,13 @@
 )
 
 (defun get-sym(r c)
+	(if (not (integerp r)) nil
+	(if (not (integerp c)) nil
 	(if (> r 2) nil
 	(if (< r 0) nil
 	(if (> c 2) nil
 	(if (< c 0) nil
-	(nth c (nth r *board*) )))))
+	(nth c (nth r *board*) )))))))
 )
 
 #| (defun get-cell-score(r c)

@@ -72,9 +72,6 @@
 		(setf (nth (car (cdr (car available-cells))) (nth (car (car available-cells)) *board*)) 'C)
 	)
 
-	;if available-cells is empty, tie
-	;sort by (car (cdr (cdr cell))), take top one, use that
-
 	(print-board)
 	(format t "~%>")
 	(if (check-win 'C) "Computer Wins!"
@@ -190,10 +187,25 @@
 |#
 
 (defun get-cell-score(r c)
-	(+ (get-line-score (+ r 1) c (+ r 2) c (- r 1) c (- r 2) c) ;vertical line
-	   (get-line-score r (+ c 1) r (+ c 2) r (- c 1) r (- c 2)) ;horizontal line
-	   (get-line-score (+ r 1) (+ c 1) (+ r 2) (+ c 2) (- r 1) (- c 1) (- r 2) (- c 2)) ;positive diagonal
-	   (get-line-score (+ r 1) (- c 1) (+ r 2) (- c 2) (- r 1) (+ c 1) (- r 1) (+ c 2)) ;negative diagonal
+	(let ((vertical (get-line-score (+ r 1) c (+ r 2) c (- r 1) c (- r 2) c))
+	   	  (horizontal (get-line-score r (+ c 1) r (+ c 2) r (- c 1) r (- c 2)))
+	   	  (positive-diag (get-line-score (+ r 1) (+ c 1) (+ r 2) (+ c 2) (- r 1) (- c 1) (- r 2) (- c 2)))
+	   	  (negative-diag (get-line-score (+ r 1) (- c 1) (+ r 2) (- c 2) (- r 1) (+ c 1) (- r 2) (+ c 2))))
+		
+		(let ((max-score (max vertical horizontal positive-diag negative-diag)))
+			(* max-score (num-occurrences max-score 
+						 (list vertical horizontal positive-diag negative-diag)))
+		)
+	)
+)
+
+(defun num-occurrences(obj lst)
+	(if (null lst)
+		0
+		(if (eq (car lst) obj)
+			(+ 1 (num-occurrences obj (cdr lst)))
+			(num-occurrences obj (cdr lst))
+		)
 	)
 )
 
@@ -246,13 +258,13 @@
 	)
 )
 
-; cell scores: CC = 5, HH = 4, C space = 3, H space = 2, space space = 1, CH = 0
+; cell scores: CC = 8, HH = 7, C space = 3, H space = 2, space space = 1, CH = 0
 (defun score-spaces(sym1 sym2)
 	(if (or (null sym1) (null sym2))
 		0
 		(if (eq sym1 sym2)
-			(if (eq sym1 'C) 5
-				(if (eq sym1 'H) 4
+			(if (eq sym1 'C) 8
+				(if (eq sym1 'H) 7
 					1
 				)
 			)

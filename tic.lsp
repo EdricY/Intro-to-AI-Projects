@@ -17,7 +17,7 @@
 	(let ((starter (read)))
 		(if (eql starter 'H)
 			(progn
-				(format t "Human starts.~%Input row and column separated by a space or a newline~%Ex: 1 2~%>")
+				(format t "Human starts.~%Input row and column separated by a space or a newline~%Ex: 1 2~%Your Move>")
 				(h-move (read) (read))
 			)
 		(if (eql starter 'C)
@@ -44,7 +44,7 @@
 	(if (eql (get-sym row col) #\space)
 		(setf (nth col (nth row *board*)) 'H)
 	(progn
-		(format t "Invalid input, try again~%>")
+		(format t "Invalid input, try again~%Your Move>")
 		(h-move (read) (read))
 	))
 	
@@ -81,7 +81,7 @@
 	(if (check-win 'C) "Computer Wins!"
 		(if (check-tie) "Tie."
 			(progn 
-				(format t "~%>")
+				(format t "~%Your Move>")
 				(h-move (read) (read))
 			)
 		)

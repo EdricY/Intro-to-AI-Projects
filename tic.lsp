@@ -1,7 +1,7 @@
 (defparameter *S* #\space)
-(defparameter *board* '((#\space #\space #\space)
-		(#\space #\space #\space)
-		(#\space #\space #\space))
+(setf *board* '((#\space #\space #\space)
+                (#\space #\space #\space)
+                (#\space #\space #\space))
 )
 
 #|
@@ -12,11 +12,8 @@
 |#
 
 (defun tic-tac-toe ()
-	(setf *board* '((#\space #\space #\space)
-			(#\space #\space #\space)
-			(#\space #\space #\space))
-	)
 	(format t "Let's play tic-tac-toe!~%Who will go first, (H)uman or (C)omputer?~%>")
+	(clear-board)
 	(let ((starter (read)))
 		(if (eql starter 'H)
 			(progn
@@ -32,6 +29,14 @@
 			(format t "Input Error!~A~%Please input H or C~%" starter)
 			(tic-tac-toe)
 		))))
+)
+
+(defun clear-board()
+	(loop for r from 0 to 2
+		do (loop for c from 0 to 2
+			do (setf (nth c (nth r *board*)) '#\space)
+		)
+	)
 )
 
 (defun h-move (row col)

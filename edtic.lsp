@@ -3,23 +3,103 @@
                 (#\space #\space #\space)
                 (#\space #\space #\space))
 )
-(setf *table1* '(
+(setf *table1* 
+	'(; bot starts at 0 0, second move starts here
 	nil
-	(1 1)
-	(2 0)
-	(1 1)
-	(2 2)
-	(1 1)
-	(0 2)
-	(1 1)
-	(0 2)
-		)
+	(1 1
+		(nil
+		nil
+		(2 2)
+		(2 2)
+		nil
+		(2 2)
+		(2 2)
+		(2 2)
+		(2 0))
+	)
+	(2 0
+		(nil
+		(1 0)
+		nil
+		(2 2)
+		(1 0)
+		(1 0)
+		nil
+		(1 0)
+		(1 0))
+	)
+	(1 1
+		(nil
+		(2 2)
+		(2 2)
+		nil
+		nil
+		(2 2)
+		(2 2)
+		(2 2)
+		(0 2))
+	)
+	(2 2
+		(nil
+		(2 1)
+		(2 0)
+		(1 2)
+		nil
+		(1 0)
+		(0 2)
+		(0 1)
+		nil)
+	)
+	(1 1
+		(nil
+		(2 2)
+		(2 2)
+		(2 2)
+		nil
+		nil
+		(2 2)
+		(2 2)
+		(0 2))
+	)
+	(0 2
+		(nil
+		(2 2)
+		nil
+		(0 1)
+		(0 1)
+		(0 1)
+		nil
+		(0 1)
+		(0 1))
+	)
+	(1 1
+		(nil
+		(2 2)
+		(2 2)
+		(2 2)
+		nil
+		(2 2)
+		(2 2)
+		nil
+		(2 0))
+	)
+	(0 2
+		(nil
+		(2 0)
+		nil
+		(0 1)
+		(0 1)
+		(0 1)
+		(0 1)
+		(0 1)
+		nil)
+	))
 )
 
-(setf *table2* '(
+(setf *table2* 
+	'(; human starts, bot's response here
 	(1 1 
-		(
-		nil
+		(nil
 		(0 2)
 		(0 1)
 		(2 0)
@@ -27,19 +107,98 @@
 		(2 2)
 		(1 0)
 		(2 2)
-		(2 1)
-		)
+		(2 1))
 	)
-	(1 1)
-	(1 1)
-	(1 1)
-	(0 0)
-	(1 1)
-	(1 1)
-	(1 1)
-	(1 1)
-		)
+	(1 1
+		((0 2)
+		nil
+		(0 0)
+		(0 0)
+		nil
+		(0 2)
+		(0 2)
+		(1 2)
+		(0 0))
+	)
+	(1 1
+		((0 1)
+		(0 0)
+		nil
+		(2 0)
+		nil
+		(2 2)
+		(1 0)
+		(2 0)
+		(1 2))
+	)
+	(1 1
+		((2 0)
+		(0 0)
+		(2 0)
+		nil
+		nil
+		(0 1)
+		(0 0)
+		(2 0)
+		(0 0))
+	)
+	(0 0
+		(nil
+		(2 1)
+		(2 0)
+		(1 2)
+		nil
+		(1 0)
+		(0 2)
+		(0 1)
+		(2 0))
+	)
+	(1 1
+		((2 2)
+		(0 2)
+		(2 2)
+		(2 1)
+		nil
+		nil
+		(0 2)
+		(2 2)
+		(0 2))
+	)
+	(1 1
+		((1 0)
+		(0 2)
+		(1 2)
+		(1 0)
+		nil
+		(1 2)
+		nil
+		(2 2)
+		(2 1))
+	)
+	(1 1
+		((2 2)
+		(1 0)
+		(2 0)
+		(2 0)
+		nil
+		(2 2)
+		(2 2)
+		nil
+		(2 0))
+	)
+	(1 1
+		((0 1)
+		(0 0)
+		(1 2)
+		(0 0)
+		nil
+		(0 2)
+		(2 1)
+		(2 0)
+		nil)
+	))
 )
+
 (setf *turns* 0)
 (setf *lookup* nil)
 
@@ -82,13 +241,16 @@
 
 (defun h-move (row col)
 	(format t "H-Move ~A ~A~%~%" row col)
-	(if (eql (get-sym row col) #\space)
-		(setf (nth col (nth row *board*)) 'H)
+	(if (not (eql (get-sym row col) #\space))
+		
 	(progn
+		(loop while (not (eql (get-sym row col) #\space)) do
 		(format t "Invalid input, try again~%Your Move>")
-		(h-move (read) (read))
+		(setf row (read)) 
+		(setf col (read))
+		)
 	))
-	
+	(setf (nth col (nth row *board*)) 'H)
 	(print-board)
 	(if (check-win 'H) "You Win!"
 		(if (check-tie) "Tie."
@@ -100,7 +262,8 @@
 (defun c-move(row col)
 	(format t "~%hmmm...~%~%")
 	(if (sleep 1) "Oh... uh... this is embarassing. You were never supposed to see this :/")
-	(if (< *turns* 3) (progn
+	(if (< *turns* 2) (progn
+		(format t "Move found in lookup table.~%")
 		(setf (nth 
 			(second (nth (+ col (* row 3)) *lookup*))
 		(nth
@@ -109,6 +272,24 @@
 		(setf *lookup* (third (nth (+ col (* row 3)) *lookup*)))
 		(setf *turns* (+ 1 *turns*))
 		)
+		(progn
+		(format t "Move made by heuristic~%")
+		; loop through available cells, scoring them
+		(let ((available-cells '()))
+                (do ((row 0 (+ row 1)))
+                        ((> row 2) t)
+                        (do ((col 0 (+ col 1)))
+                                ((> col 2) t)
+                                (if (is-space (get-sym row col))
+                                        (setf available-cells (cons (cons row (cons col (get-cell-score row col))) available-cells))
+                                )
+                        )
+                )
+                ; sort them by score
+                (setf available-cells (sort available-cells #'> :key #'(lambda (x) (cdr (cdr x)))))
+                ; pick the one with the highest score and use that as the move
+                (setf (nth (car (cdr (car available-cells))) (nth (car (car available-cells)) *board*)) 'C)
+        	))
 	)
 	
 	(print-board)
